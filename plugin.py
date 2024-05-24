@@ -20,7 +20,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 """
-<plugin key="TeslaApiDomoticz" name="Tesla for Domoticz plugin" author="Jan-Jaap Kostelijk" version="0.1.0">
+<plugin key="TeslaApiDomoticz" name="Tesla API for Domoticz plugin" author="Jan-Jaap Kostelijk" version="0.1.0">
     <description>
         <h2>Tesla API Domoticz plugin</h2>
         A plugin for Tesla EV's . Use at own risk!
@@ -140,8 +140,9 @@ class TeslaPlugin:
             
         #TeslaServer = TeslaDevice.TeslaServer(self.p_email)
         
-        #initsuccess = TeslaServer.initialize()
-        if initsuccess:
+        self.initsuccess = False
+        #self.initsuccess = TeslaServer.initialize()
+        if self.initsuccess:
             logging.info("Initialisation succeeded")
         else:
             Domoticz.Error("Initialisation failed, check log file and/or run tesla_prepare first")
@@ -180,7 +181,7 @@ class TeslaPlugin:
 
     def onHeartbeat(self):
         self.runCounter = self.runCounter - 1
-        if self.runCounter <= 0:
+        if self.runCounter <= 0 and self.initsuccess:
             logging.debug("Polling unit")
             self.runCounter = 10 #check for connection status not every heartbeat         
 
